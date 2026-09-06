@@ -165,6 +165,9 @@ B: mark all for bulk rename
 p: execute paste/move/delete/bulk_rename
 c: clear file selections
 
+P: Save the current directory
+o: Open the saved directory
+
 [1-9]: favourites/bookmarks (see customization)
 
 q: exit with 'cd' (if enabled).
@@ -319,6 +322,9 @@ export FFF_KEY_BULK_RENAME_ALL="B"
 
 export FFF_KEY_PASTE="p"
 export FFF_KEY_CLEAR="c"
+
+export FFF_KEY_SAVE_DIR="P"
+export FFF_KEY_GOTO_SAVE="o"
 
 export FFF_KEY_RENAME="r"
 export FFF_KEY_MKDIR="n"

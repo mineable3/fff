@@ -162,6 +162,14 @@ status_line() {
     # Remove all non-printable characters.
     PWD_escaped=${PWD//[^[:print:]]/^[}
 
+    # Checks if the status line should showed that the directory is saved
+    if [[ -n $PUSH_DIR && $PUSH_DIR == $PWD ]]; then
+        # Using a local variable so that the variable is null
+        # on each call which means this needs to be evaluated
+        # for the saved tag to appear on the status line
+        local saved_position_status="[Saved]"
+    fi
+
     # '\e7':       Save cursor position.
     #              This is more widely supported than '\e[s'.
     # '\e[%sH':    Move cursor to bottom of the terminal.
@@ -174,7 +182,7 @@ status_line() {
     # '\e[H\e[K':  Clear line below status_line.
     # '\e8':       Restore cursor position.
     #              This is more widely supported than '\e[u'.
-    printf '\e7\e[%sH\e[3%s;4%sm%*s\r%s %s%s\e[m\e[%sH\e[K\e8' \
+    printf '\e7\e[%sH\e[3%s;4%sm%*s\r%s %s%s %s\e[m\e[%sH\e[K\e8' \
            "$((LINES-1))" \
            "${FFF_COL5:-0}" \
            "${FFF_COL2:-1}" \
@@ -182,6 +190,7 @@ status_line() {
            "($((scroll+1))/$((list_total+1)))" \
            "${marked_files[*]:+${mark_ui}}" \
            "${1:-${PWD_escaped:-/}}" \
+           "${saved_position_status:-""}" \
            "$LINES"
 }
 
@@ -1043,6 +1052,19 @@ key() {
         # Refresh current dir.
         ${FFF_KEY_REFRESH:=e})
             open "$PWD"
+        ;;
+
+        # Saves the current directory 
+        ${FFF_KEY_SAVE_DIR:=P})
+            PUSH_DIR="$PWD"
+            # Redraws the status line to show the directory was saved
+            status_line
+        ;;
+
+        # Opens the directory that was pushed
+        ${FFF_KEY_GOTO_SAVE:=o})
+            # Just opens the working directory if none have been saved
+            open "${PUSH_DIR:-$PWD}"
         ;;
 
         # Directory favourites.
