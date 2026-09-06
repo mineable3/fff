@@ -312,7 +312,7 @@ print_line() {
     # Remove all non-printable characters.
     file_name=${file_name//[^[:print:]]/^[}
 
-    printf '\r%b%s\e[m\r' \
+    printf '\r%b%s%s\e[m\r' \
         "${file_pre}${format}" \
         "${file_name}${suffix}${file_post}"
 }
@@ -998,6 +998,17 @@ key() {
                 clear_screen
                 status_line "${list[scroll]}"
                 "${FFF_STAT_CMD:-stat}" "${list[scroll]}"
+                read -ern 1
+                redraw
+            }
+        ;;
+        
+        # Show the disk usage for the current dir
+        ${FFF_KEY_DISK_USAGE:=u})
+            [[ -e "${list[scroll]}" ]] && {
+                clear_screen
+                status_line "${list[scroll]}"
+                du -bah --max-depth=1 . | sort -hr
                 read -ern 1
                 redraw
             }
