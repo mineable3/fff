@@ -78,8 +78,8 @@ A simple file manager written in `bash`.
 ### Manual
 
 1. Download `fff`.
-    - Release: https://github.com/dylanaraps/fff/releases/latest
-    - Git: `git clone https://github.com/dylanaraps/fff`
+    - Release: https://github.com/mineable3/fff/releases/latest
+    - Git: `git clone https://github.com/mineable3/fff`
 2. Change working directory to `fff`.
     - `cd fff`
 3. Run `make install` inside the script directory to install the script.
@@ -165,8 +165,8 @@ B: mark all for bulk rename
 p: execute paste/move/delete/bulk_rename
 c: clear file selections
 
-P: Save the current directory
-o: Open the saved directory
+P: save the current directory
+o: open the saved directory
 
 [1-9]: favourites/bookmarks (see customization)
 
@@ -408,3 +408,4 @@ See: [**`fff.vim`**](https://github.com/dylanaraps/fff.vim)
 ¯\\_(ツ)_/¯
 
 <sup><sub>dont touch my shrug</sub></sup>
+
