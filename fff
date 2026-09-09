@@ -184,8 +184,8 @@ status_line() {
     #              This is more widely supported than '\e[u'.
     printf '\e7\e[%sH\e[3%s;4%sm%*s\r%s %s%s %s\e[m\e[%sH\e[K\e8' \
            "$((LINES-1))" \
-           "${FFF_COL5:-0}" \ # The color of the status line text
-           "${FFF_COL2:-1}" \ # The color for the status line background
+           "${FFF_COL5:-0}" \
+           "${FFF_COL2:-1}" \
            "$COLUMNS" "" \
            "($((scroll+1))/$((list_total+1)))" \
            "${marked_files[*]:+${mark_ui}}" \
@@ -635,8 +635,22 @@ open() {
 }
 
 cmd_line() {
+    # Positional Arguments:
+    #   1: The prompt
+    #   2: The type of command line behavior (search, new file, etc.)
+    #   3: Custom escape / "no" value (IDK, see function body)
+    #   4: Initial text
     # Write to the command_line (under status_line).
     cmd_reply=
+
+    # 
+    [[ $2 == rename ]] && {
+        cmd_reply=${1}
+        # Sets all of the positional arguments to themselves
+        # except for $1. The "--" is for safety, in case any
+        # arguments start with a "-".
+        set -- "rename: " "${@:1}"
+    }
 
     # '\e7':     Save cursor position.
     # '\e[?25h': Unhide the cursor.
@@ -943,7 +957,9 @@ key() {
             [[ ! -e ${list[scroll]} ]] &&
                 return
 
-            cmd_line "rename ${list[scroll]##*/}: "
+            # ${parameter##word} deletes the longest match of the expansion of
+            # word in parameter. In this case, it just leaves the file name.
+            cmd_line ${list[scroll]##*/} "rename"
 
             [[ $cmd_reply ]] &&
                 if [[ -e $cmd_reply ]]; then
